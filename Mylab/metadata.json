@@ -1,0 +1,5 @@
+{
+  "name": "Poisson ARCH Research Explorer",
+  "description": "An interactive research assistant and simulation tool for exploring Large Deviations and Importance Sampling in Poisson ARCH(1) models.",
+  "requestFramePermissions": []
+}
