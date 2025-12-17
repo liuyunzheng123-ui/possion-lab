@@ -1,4 +1,4 @@
-act, { useState } from 'react';
+import React, { useState } from 'react';
 import { BookText, BarChart3, GraduationCap, LogOut } from 'lucide-react';
 import { SimulationView } from './components/SimulationView';
 import ResearchView from './components/ResearchView';
@@ -11,7 +11,8 @@ enum Tab {
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.RESEARCH);
+  // Default to SIMULATION tab so the app is useful immediately without API keys
+  const [activeTab, setActiveTab] = useState<Tab>(Tab.SIMULATION);
 
   // If not authenticated, show the Login/Landing page
   if (!isAuthenticated) {
@@ -39,17 +40,6 @@ const App: React.FC = () => {
             <div className="flex items-center gap-4">
                 <nav className="flex space-x-1 bg-slate-100 p-1 rounded-lg">
                   <button
-                    onClick={() => setActiveTab(Tab.RESEARCH)}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
-                      activeTab === Tab.RESEARCH
-                        ? 'bg-white text-blue-700 shadow-sm'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
-                    }`}
-                  >
-                    <BookText size={18} />
-                    <span className="hidden sm:inline">研究现状</span>
-                  </button>
-                  <button
                     onClick={() => setActiveTab(Tab.SIMULATION)}
                     className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
                       activeTab === Tab.SIMULATION
@@ -59,6 +49,17 @@ const App: React.FC = () => {
                   >
                     <BarChart3 size={18} />
                     <span className="hidden sm:inline">仿真实验室</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab(Tab.RESEARCH)}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
+                      activeTab === Tab.RESEARCH
+                        ? 'bg-white text-blue-700 shadow-sm'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                    }`}
+                  >
+                    <BookText size={18} />
+                    <span className="hidden sm:inline">研究现状</span>
                   </button>
                 </nav>
                 
