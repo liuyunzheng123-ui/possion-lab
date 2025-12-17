@@ -1,10 +1,19 @@
 import { GoogleGenAI } from "@google/genai";
 import { ResearchResult, SearchSource } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Safely get key, might be empty string if not configured in Vercel
+const apiKey = process.env.API_KEY;
 
 export const searchResearchTopic = async (query: string): Promise<ResearchResult> => {
+  if (!apiKey) {
+    return {
+      markdown: "### AI 功能未启用\n\n检测到当前环境未配置 API Key。如果您不需要 AI 检索功能，请直接使用**仿真实验室**进行数值实验。\n\n若需启用此功能，请在 Vercel 环境变量中添加 `API_KEY`。",
+      sources: []
+    };
+  }
+
   try {
+    const ai = new GoogleGenAI({ apiKey });
     // Keep search on flash for speed and grounding stability
     const modelId = 'gemini-2.5-flash';
     
@@ -70,9 +79,12 @@ export const searchResearchTopic = async (query: string): Promise<ResearchResult
 };
 
 export const explainSimulationConcept = async (params: string): Promise<string> => {
+    if (!apiKey) return "AI 解释功能未启用 (Missing API Key)";
+
     const prompt = `Explain simply how Importance Sampling guided by Large Deviations would theoretically work for a Poisson ARCH(1) process with parameters: ${params}. Contrast this with Naive Monte Carlo. Keep it brief and educational. **Please answer in Chinese (Simplified).**`;
 
     try {
+        const ai = new GoogleGenAI({ apiKey });
         // 1. Attempt using the high-reasoning Gemini 3.0 Pro (Preview) model
         const response = await ai.models.generateContent({
             model: 'gemini-3-pro-preview',
@@ -84,6 +96,7 @@ export const explainSimulationConcept = async (params: string): Promise<string> 
         
         // 2. Fallback to Gemini 2.5 Flash if Pro fails (e.g. 429 Quota Exceeded)
         try {
+            const ai = new GoogleGenAI({ apiKey });
             const response = await ai.models.generateContent({
                 model: 'gemini-2.5-flash',
                 contents: prompt
